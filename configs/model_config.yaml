@@ -1,0 +1,56 @@
+# 模型配置
+model:
+  # 基础模型配置 - 小模型适合RTX 3060
+  model_type: "gpt2"  # 支持: gpt2, dialogpt等
+  model_name_or_path: "microsoft/DialoGPT-medium"
+  
+  # Tokenizer配置
+  tokenizer:
+    padding_side: "left"
+    truncation_side: "left"
+    add_eos_token: true
+    add_bos_token: false
+    
+  # 特殊token - DialoGPT使用GPT2的token
+  special_tokens:
+    pad_token: "<|endoftext|>"
+    eos_token: "<|endoftext|>"
+    bos_token: "<|endoftext|>"
+    unk_token: "<|endoftext|>"
+    
+  # 生成配置 - 适合小模型
+  generation:
+    max_new_tokens: 256             # 减少生成长度
+    temperature: 0.8                # 适当提高创造性
+    top_p: 0.9
+    top_k: 50
+    do_sample: true
+    repetition_penalty: 1.1
+    
+# 数据配置
+data:
+  # 数据集配置
+  dataset_format: "alpaca"  # 支持: alpaca, sharegpt, self_instruct等
+  
+  # 对话模板 - 简单格式适合小模型
+  template:
+    system: "You are a helpful AI assistant."
+    user: "Human: {instruction}\n{input}\nAssistant:"
+    assistant: "{output}"
+    
+  # 数据预处理 - 适合小模型和有限显存
+  preprocessing:
+    max_source_length: 256          # 减少输入长度
+    max_target_length: 256          # 减少目标长度
+    ignore_pad_token_for_loss: true
+    
+# 评估配置
+evaluation:
+  metrics: ["bleu"]                 # 简化评估指标
+  eval_batch_size: 2               # 小批量评估
+  
+# 推理配置
+inference:
+  batch_size: 1
+  max_length: 512                   # 减少最大长度
+  num_beams: 1                      # 不使用beam search以节省显存

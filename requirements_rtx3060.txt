@@ -1,0 +1,20 @@
+# 核心依赖（RTX 3060优化版本）
+torch>=2.0.0
+transformers>=4.35.0
+peft>=0.6.0
+datasets>=2.14.0
+accelerate>=0.24.0
+bitsandbytes>=0.41.0
+
+# 基础依赖
+numpy>=1.24.0
+tqdm>=4.65.0
+pyyaml>=6.0
+
+# 可选依赖（用于评估）
+# sacrebleu>=2.3.0
+# rouge-score>=0.1.2
+# nltk>=3.8
+
+# 如果需要wandb日志
+# wandb>=0.15.0

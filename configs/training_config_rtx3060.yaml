@@ -1,0 +1,59 @@
+# RTX 3060 专用训练配置
+training:
+  # 模型配置 - 专为RTX 3060 12GB显存优化
+  model_name_or_path: "/home/ubuntu/wtwei/transformer_learn/llm_sft_lora/distilgpt2"  # 82M参数，非常适合RTX 3060
+  trust_remote_code: true
+  
+  # LoRA配置 - 小模型可以用更大的rank
+  lora:
+    r: 32                   # 更大的rank以补偿小模型容量
+    lora_alpha: 64          # 相应增加alpha
+    lora_dropout: 0.1
+    target_modules: ["c_attn", "c_proj"]  # DistilGPT2的attention模块
+    bias: "none"
+    task_type: "CAUSAL_LM"
+    
+  # 量化配置 - 保守设置
+  quantization:
+    load_in_4bit: false     # 小模型不需要量化
+    
+  # 训练参数 - 充分利用12GB显存
+  output_dir: "./output"
+  num_train_epochs: 500      # 小模型需要更多epochs
+  per_device_train_batch_size: 8    # 可以用更大的batch
+  per_device_eval_batch_size: 8
+  gradient_accumulation_steps: 2    
+  learning_rate: 0.0005             # 修复：5e-4 -> 0.0005
+  weight_decay: 0.01
+  lr_scheduler_type: "cosine"
+  warmup_steps: 30
+  max_grad_norm: 1.0
+  
+  # 保存和日志
+  save_strategy: "steps"
+  save_steps: 50            # 更频繁保存，因为训练快
+  save_total_limit: 3
+  eval_strategy: "steps"    # 修复：evaluation_strategy -> eval_strategy
+  eval_steps: 50
+  logging_steps: 10
+  
+  # 数据配置
+  max_seq_length: 512       # 适中的长度
+  data_path: "./data/processed/train.json"
+  val_data_path: "./data/processed/val.json"
+  
+  # 其他设置
+  dataloader_num_workers: 0         # 设置为0避免多进程问题
+  remove_unused_columns: false
+  report_to: "none"
+  run_name: "distilgpt2_sft_lora"
+  
+  # 分布式训练
+  ddp_find_unused_parameters: false
+  
+  # 梯度检查点
+  gradient_checkpointing: true
+  
+  # 数据类型
+  fp16: true                # RTX 3060支持FP16
+  bf16: false

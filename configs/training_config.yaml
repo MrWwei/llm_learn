@@ -1,0 +1,70 @@
+# 训练配置
+training:
+  # 模型配置 - 适合RTX 3060 12GB显存
+  model_name_or_path: "microsoft/DialoGPT-medium"  # 小模型，约350M参数
+  # 备选模型:
+  # "distilgpt2" (82M参数)
+  # "gpt2" (124M参数) 
+  # "microsoft/DialoGPT-small" (117M参数)
+  # "TinyLlama/TinyLlama-1.1B-Chat-v1.0" (1.1B参数)
+  trust_remote_code: true
+  
+  # LoRA配置 - 针对小模型优化
+  lora:
+    r: 16                   # 增加LoRA rank以提高表达能力
+    lora_alpha: 32          # LoRA alpha
+    lora_dropout: 0.1       # LoRA dropout
+    target_modules: ["c_attn", "c_proj", "c_fc"]  # DialoGPT的目标模块
+    bias: "none"            # bias类型
+    task_type: "CAUSAL_LM"  # 任务类型
+    
+  # 量化配置 - RTX 3060优化
+  quantization:
+    load_in_4bit: true      # 使用4bit量化节省显存
+    bnb_4bit_compute_dtype: "float16"
+    bnb_4bit_quant_type: "nf4"
+    bnb_4bit_use_double_quant: true
+    
+  # 训练参数 - 适合12GB显存
+  output_dir: "./output"
+  num_train_epochs: 5
+  per_device_train_batch_size: 4    # 增加batch size
+  per_device_eval_batch_size: 4
+  gradient_accumulation_steps: 4    # 减少梯度累积步数
+  learning_rate: 0.0003               # 适当提高学习率
+  weight_decay: 0.01
+  lr_scheduler_type: "cosine"
+  warmup_steps: 50                  # 减少warmup步数
+  max_grad_norm: 1.0
+  
+  # 保存和日志
+  save_strategy: "steps"
+  save_steps: 200                   # 更频繁保存
+  save_total_limit: 2               # 减少保存的检查点数量
+  eval_strategy: "steps"            # 修复：evaluation_strategy -> eval_strategy
+  eval_steps: 200
+  logging_steps: 20                 # 更频繁的日志记录
+  
+  # 数据配置 - 适合小模型
+  max_seq_length: 512              # 减少序列长度以节省显存
+  data_path: "./data/processed/train.json"
+  val_data_path: "./data/processed/val.json"
+  
+  # 其他设置
+  dataloader_num_workers: 2         # 减少worker数量
+  remove_unused_columns: false
+  report_to: "none"                 # 不使用wandb以简化
+  run_name: "small_llm_sft_lora"
+  
+  # DeepSpeed配置 (可选)
+  deepspeed: null  # 小模型不需要DeepSpeed
+  
+  # 分布式训练
+  ddp_find_unused_parameters: false
+  
+  # 梯度检查点 - 节省显存
+  gradient_checkpointing: true
+  
+  # 数据类型 - RTX 3060支持
+  fp16: true                        # 使用fp16节省显存
+  bf16: false                       # RTX 3060不支持bf16
