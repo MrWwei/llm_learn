@@ -125,6 +125,8 @@ def simple_training_demo():
     logger.info("- 批大小: 4")
     logger.info("- 序列长度: 512")
     logger.info("- 精度: FP16")
+    logger.info("- 🎯 提示词工程: 角色扮演、思维链、Few-Shot")
+    logger.info("- 🔍 RAG技术: 轻量级检索增强生成")
     
     # 显示内存使用建议
     if has_gpu:
@@ -136,13 +138,18 @@ def simple_training_demo():
     
     logger.info("\n要开始训练，请按照以下步骤:")
     logger.info("1. 安装依赖: pip install -r requirements.txt")
-    logger.info("2. 运行训练: python train.py --config configs/training_config.yaml")
-    logger.info("3. 推理测试: python inference.py --model_path ./output/final_model")
+    logger.info("2. 生成提示词工程数据: python prompt_engineering_data.py")
+    logger.info("3. 初始化RAG知识库: python rag_system.py")
+    logger.info("4. 运行训练: python train.py --config configs/training_config.yaml")
+    logger.info("5. 测试RAG系统: python test_rag.py")
+    logger.info("6. 推理测试: python inference.py --model_path ./output/final_model")
     
     logger.info("\n注意事项:")
     logger.info("- 确保有足够的磁盘空间（至少5GB）")
     logger.info("- 训练过程中监控GPU温度")
     logger.info("- 可以根据显存使用情况调整batch_size")
+    logger.info("- 🎯 提示词工程可以显著提升模型效果")
+    logger.info("- 🔍 RAG技术让小模型具备大模型的知识广度")
     
     return True
 
@@ -187,8 +194,14 @@ if __name__ == "__main__":
     print("="*60)
     print("\n下一步:")
     print("1. pip install -r requirements_rtx3060.txt")
-    print("2. 运行数据准备: python data/prepare_dataset.py")
-    print("3. 开始训练: python train.py --config configs/training_config.yaml")
+    print("2. 生成增强数据: python prompt_engineering_data.py")
+    print("3. 初始化RAG系统: python rag_system.py")
+    print("4. 运行数据准备: python data/prepare_dataset.py")
+    print("5. 开始训练: python train.py --config configs/training_config.yaml")
+    print("6. 测试RAG效果: python test_rag.py")
+    print("\n🎯 新功能:")
+    print("- 提示词工程: 多种提示技术增强训练效果")
+    print("- RAG技术: 检索增强生成，提升回答准确性")
     print("\n注意: 如果遇到显存不足，可以:")
     print("- 减少batch_size到2或1")
     print("- 使用更小的模型如distilgpt2")

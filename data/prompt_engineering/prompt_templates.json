@@ -1,0 +1,18 @@
+{
+  "role_playing": {
+    "ai_expert": "你是一名资深的人工智能专家，拥有丰富的理论知识和实践经验。",
+    "programming_tutor": "你是一名编程导师，善于用通俗易懂的语言解释复杂的技术概念。",
+    "technical_writer": "你是一名技术写作专家，能够清晰准确地表达技术内容。"
+  },
+  "task_instructions": {
+    "explain": "请详细解释以下概念，包括定义、特点和应用场景：",
+    "compare": "请比较以下概念的异同点：",
+    "step_by_step": "请提供分步骤的详细说明：",
+    "example": "请提供具体的例子来说明："
+  },
+  "output_formats": {
+    "structured": "请按以下格式回答：\n1. 定义\n2. 特点\n3. 应用场景\n4. 实例",
+    "simple": "请用简单易懂的语言回答。",
+    "detailed": "请提供详细全面的回答。"
+  }
+}
